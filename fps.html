@@ -3,162 +3,283 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FPSゲーム制作中 | 自作ゲーム置き場</title>
-  <meta name="description" content="制作中のFPSゲームについてまとめたページです。今後追加したい機能や目標を書いています。">
+  <title>FPS操作テスト | 自作ゲーム置き場</title>
+  <meta name="description" content="WASD移動とマウス視点操作を試せるFPS操作テストページです。">
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
+    html, body {
       margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
       font-family: sans-serif;
-      background: linear-gradient(180deg, #020617, #0f172a, #111827);
       color: white;
-      line-height: 1.7;
     }
 
-    header {
+    #gameCanvas {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+      background: linear-gradient(#87ceeb 0%, #87ceeb 50%, #3b3b3b 50%, #3b3b3b 100%);
+    }
+
+    #ui {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      pointer-events: none;
+    }
+
+    #message {
+      background: rgba(0, 0, 0, 0.65);
+      padding: 16px 22px;
+      border-radius: 14px;
       text-align: center;
-      padding: 70px 20px 40px;
-      background: radial-gradient(circle at top, rgba(56, 189, 248, 0.25), transparent 45%);
+      max-width: 420px;
+      line-height: 1.6;
+      pointer-events: auto;
     }
 
-    h1 {
-      font-size: 42px;
-      margin-bottom: 10px;
-    }
-
-    .subtitle {
-      color: #cbd5e1;
-      font-size: 18px;
-      max-width: 700px;
-      margin: 0 auto;
-    }
-
-    main {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 20px 20px 60px;
-    }
-
-    .card {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 20px;
-      padding: 24px;
-      margin-bottom: 24px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    }
-
-    h2 {
-      margin-top: 0;
-      font-size: 28px;
-      color: #7dd3fc;
-    }
-
-    p {
-      color: #e5e7eb;
-      font-size: 17px;
-    }
-
-    ul {
-      padding-left: 22px;
-      color: #e5e7eb;
-      font-size: 17px;
-    }
-
-    li {
-      margin-bottom: 10px;
-    }
-
-    .status {
-      display: inline-block;
-      padding: 8px 14px;
-      border-radius: 999px;
-      background: rgba(56, 189, 248, 0.18);
-      color: #7dd3fc;
+    #message button {
+      margin-top: 12px;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 10px;
+      background: #38bdf8;
+      color: #0f172a;
       font-weight: bold;
-      margin-top: 10px;
+      cursor: pointer;
     }
 
-    .btn {
-      display: inline-block;
-      margin-top: 14px;
-      text-decoration: none;
-      background: linear-gradient(90deg, #38bdf8, #6366f1);
-      color: white;
-      padding: 12px 20px;
+    #crosshair {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      width: 20px;
+      height: 20px;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    #crosshair::before,
+    #crosshair::after {
+      content: "";
+      position: absolute;
+      background: white;
+    }
+
+    #crosshair::before {
+      left: 9px;
+      top: 0;
+      width: 2px;
+      height: 20px;
+    }
+
+    #crosshair::after {
+      left: 0;
+      top: 9px;
+      width: 20px;
+      height: 2px;
+    }
+
+    #hud {
+      position: fixed;
+      left: 16px;
+      bottom: 16px;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 10px 14px;
       border-radius: 12px;
-      font-weight: bold;
-      transition: transform 0.2s, opacity 0.2s;
-    }
-
-    .btn:hover {
-      transform: translateY(-2px);
-      opacity: 0.9;
-    }
-
-    footer {
-      text-align: center;
-      color: #94a3b8;
-      padding: 25px 20px 40px;
       font-size: 14px;
+      line-height: 1.5;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>FPSゲーム制作中</h1>
-    <p class="subtitle">
-      このページは、これから作っていく自作FPSゲームの制作ページです。
-      少しずつ機能を増やして、遊べる作品にしていく予定です。
-    </p>
-    <div class="status">現在: 制作準備中</div>
-  </header>
+  <canvas id="gameCanvas"></canvas>
 
-  <main>
-    <section class="card">
-      <h2>このゲームについて</h2>
-      <p>
-        今作ろうとしているのは、一人称視点で遊べるFPSゲームです。
-        まずは小さく作り始めて、少しずつ本格的な形にしていきます。
-      </p>
-    </section>
+  <div id="ui">
+    <div id="message">
+      <div>クリックしてFPS操作を開始</div>
+      <div>W A S D で移動 / マウスで視点操作</div>
+      <button id="startButton">スタート</button>
+    </div>
+  </div>
 
-    <section class="card">
-      <h2>最初に作りたい機能</h2>
-      <ul>
-        <li>前後左右に移動できる</li>
-        <li>視点を動かせる</li>
-        <li>弾を撃てる</li>
-        <li>的に当たる仕組みを作る</li>
-      </ul>
-    </section>
+  <div id="crosshair"></div>
 
-    <section class="card">
-      <h2>今後追加したい機能</h2>
-      <ul>
-        <li>敵キャラクター</li>
-        <li>HPの仕組み</li>
-        <li>ステージ</li>
-        <li>スコアや勝敗の表示</li>
-        <li>オンライン対戦</li>
-      </ul>
-    </section>
+  <div id="hud">
+    W A S D: 移動<br>
+    マウス: 視点移動<br>
+    Esc: マウス固定解除
+  </div>
 
-    <section class="card">
-      <h2>ひとこと</h2>
-      <p>
-        まだ制作中ですが、これから少しずつ成長させていきます。
-        完成したら、このページから遊べるようにしたいです。
-      </p>
-      <a class="btn" href="index.html">ホームに戻る</a>
-    </section>
-  </main>
+  <script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    const message = document.getElementById("message");
+    const startButton = document.getElementById("startButton");
 
-  <footer>
-    © 2026 自作ゲーム置き場
-  </footer>
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+
+    const keys = {
+      w: false,
+      a: false,
+      s: false,
+      d: false
+    };
+
+    const player = {
+      x: 0,
+      z: 0,
+      angle: 0,
+      pitch: 0,
+      speed: 0.08
+    };
+
+    const world = [
+      { x: 0, z: 5, size: 1.5, color: "#ef4444" },
+      { x: 3, z: 9, size: 1.5, color: "#22c55e" },
+      { x: -3, z: 12, size: 2, color: "#eab308" },
+      { x: 5, z: 15, size: 2, color: "#38bdf8" },
+      { x: -5, z: 18, size: 2.5, color: "#a855f7" }
+    ];
+
+    document.addEventListener("keydown", (e) => {
+      const key = e.key.toLowerCase();
+      if (key in keys) keys[key] = true;
+    });
+
+    document.addEventListener("keyup", (e) => {
+      const key = e.key.toLowerCase();
+      if (key in keys) keys[key] = false;
+    });
+
+    startButton.addEventListener("click", () => {
+      canvas.requestPointerLock();
+    });
+
+    canvas.addEventListener("click", () => {
+      if (document.pointerLockElement !== canvas) {
+        canvas.requestPointerLock();
+      }
+    });
+
+    document.addEventListener("pointerlockchange", () => {
+      if (document.pointerLockElement === canvas) {
+        message.style.display = "none";
+      } else {
+        message.style.display = "block";
+      }
+    });
+
+    document.addEventListener("mousemove", (e) => {
+      if (document.pointerLockElement === canvas) {
+        player.angle += e.movementX * 0.0025;
+        player.pitch -= e.movementY * 0.002;
+        if (player.pitch > 1.2) player.pitch = 1.2;
+        if (player.pitch < -1.2) player.pitch = -1.2;
+      }
+    });
+
+    function update() {
+      let moveX = 0;
+      let moveZ = 0;
+
+      if (keys.w) {
+        moveX += Math.sin(player.angle) * player.speed;
+        moveZ += Math.cos(player.angle) * player.speed;
+      }
+      if (keys.s) {
+        moveX -= Math.sin(player.angle) * player.speed;
+        moveZ -= Math.cos(player.angle) * player.speed;
+      }
+      if (keys.a) {
+        moveX -= Math.cos(player.angle) * player.speed;
+        moveZ += Math.sin(player.angle) * player.speed;
+      }
+      if (keys.d) {
+        moveX += Math.cos(player.angle) * player.speed;
+        moveZ -= Math.sin(player.angle) * player.speed;
+      }
+
+      player.x += moveX;
+      player.z += moveZ;
+    }
+
+    function drawBackground() {
+      const horizonOffset = player.pitch * 180;
+      ctx.fillStyle = "#87ceeb";
+      ctx.fillRect(0, 0, canvas.width, canvas.height / 2 + horizonOffset);
+      ctx.fillStyle = "#2f2f2f";
+      ctx.fillRect(0, canvas.height / 2 + horizonOffset, canvas.width, canvas.height / 2 - horizonOffset);
+    }
+
+    function drawObject(obj) {
+      const dx = obj.x - player.x;
+      const dz = obj.z - player.z;
+
+      const sin = Math.sin(-player.angle);
+      const cos = Math.cos(-player.angle);
+
+      const localX = dx * cos - dz * sin;
+      const localZ = dx * sin + dz * cos;
+
+      if (localZ <= 0.1) return;
+
+      const scale = 500 / localZ;
+      const screenX = canvas.width / 2 + localX * scale;
+      const screenY = canvas.height / 2 + player.pitch * 150;
+      const size = obj.size * scale;
+
+      ctx.fillStyle = obj.color;
+      ctx.fillRect(screenX - size / 2, screenY - size, size, size);
+    }
+
+    function drawGroundLines() {
+      ctx.strokeStyle = "rgba(255,255,255,0.15)";
+      ctx.lineWidth = 1;
+
+      for (let i = 1; i < 20; i++) {
+        const z = i * 2;
+        const y = canvas.height / 2 + (220 / z) + player.pitch * 150;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+      }
+    }
+
+    function render() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawBackground();
+      drawGroundLines();
+
+      const sortedWorld = [...world].sort((a, b) => {
+        const da = (a.x - player.x) **2 + (a.z - player.z)** 2;
+        const db = (b.x - player.x) **2 + (b.z - player.z)** 2;
+        return db - da;
+      });
+
+      for (const obj of sortedWorld) {
+        drawObject(obj);
+      }
+    }
+
+    function gameLoop() {
+      update();
+      render();
+      requestAnimationFrame(gameLoop);
+    }
+
+    gameLoop();
+  </script>
 </body>
 </html>
