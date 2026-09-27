@@ -3,77 +3,124 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>自作ゲーム置き場</title>
-  <meta name="description" content="自作ゲームや制作中の作品をまとめたページです。">
+  <title>自作ゲーム置き場 | ブラウザゲーム公開サイト</title>
+  <meta name="description" content="自作のブラウザゲームを公開しているサイトです。避けゲームや制作中のFPSゲームを掲載しています。">
   <style>
-    body {
-      font-family: sans-serif;
-      background: #0f1220;
-      color: white;
-      margin: 0;
-      padding: 0;
+    * {
+      box-sizing: border-box;
     }
 
-    header {
-      background: #1b2140;
-      padding: 32px 20px;
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: linear-gradient(180deg, #0b1020, #111827, #0f172a);
+      color: white;
       text-align: center;
     }
 
+    header {
+      padding: 60px 20px 30px;
+    }
+
     h1 {
-      margin: 0;
-      font-size: 32px;
+      font-size: 40px;
+      margin-bottom: 10px;
     }
 
     p {
+      color: #cbd5e1;
+      font-size: 18px;
       line-height: 1.6;
     }
 
-    main {
-      max-width: 900px;
+    .sub {
+      max-width: 700px;
       margin: 0 auto;
-      padding: 24px;
+    }
+
+    .games {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 24px;
+      padding: 30px 20px 60px;
     }
 
     .card {
-      background: #1a1f36;
-      border-radius: 16px;
-      padding: 20px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      width: 320px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(6px);
+      text-align: left;
+    }
+
+    .card h2 {
+      margin-top: 0;
+      font-size: 26px;
+    }
+
+    .card p {
+      font-size: 16px;
       margin-bottom: 20px;
     }
 
-    a.button {
+    .btn {
       display: inline-block;
-      margin-top: 12px;
-      background: #4da3ff;
-      color: white;
       text-decoration: none;
-      padding: 10px 16px;
-      border-radius: 10px;
+      background: linear-gradient(90deg, #38bdf8, #6366f1);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-weight: bold;
+      transition: transform 0.2s, opacity 0.2s;
     }
 
-    a.button:hover {
-      background: #2d8cf0;
+    .btn:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
+    }
+
+    footer {
+      padding: 20px;
+      color: #94a3b8;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
   <header>
     <h1>自作ゲーム置き場</h1>
-    <p>作ったゲームや制作中の作品をまとめるページです。</p>
+    <p class="sub">
+      ここは自分で作ったブラウザゲームをまとめるページです。<br>
+      避けゲームや制作中のFPSゲームを公開していきます。
+    </p>
   </header>
 
-  <main>
-    <div class="card">
-      <h2>FPSテスト版</h2>
-      <p>ブラウザで動くFPSの試作版です。移動や視点操作、射撃っぽい動きを練習中です。</p>
-      <a class="button" href="dodge.html" target="_blank">ゲームを見る</a>
-    </div>
+  <main class="games">
+    <section class="card">
+      <h2>避けゲーム</h2>
+      <p>
+        上から落ちてくる敵をよけて生き残るブラウザゲームです。<br>
+        シンプルだけど、ちゃんと遊べます。
+      </p>
+      <a class="btn" href="dodge.html">遊ぶ</a>
+    </section>
 
-    <div class="card">
-      <h2>これから追加予定</h2>
-      <p>今後ここに新しいゲームを追加していきます。</p>
-    </div>
+    <section class="card">
+      <h2>FPSゲーム</h2>
+      <p>
+        いま制作を始めようとしている作品です。<br>
+        これから少しずつ作っていきます。
+      </p>
+      <a class="btn" href="fps.html">制作中ページを見る</a>
+    </section>
   </main>
+
+  <footer>
+    © 2026 自作ゲーム置き場
+  </footer>
 </body>
 </html>
