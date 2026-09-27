@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>避けゲーム</title>
+  <style>
+    body {
+      margin: 0;
+      background: #111;
+      color: white;
+      font-family: sans-serif;
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 20px;
+    }
+
+    #gameCanvas {
+      background: #222;
+      display: block;
+      margin: 20px auto;
+      border: 3px solid white;
+      touch-action: none;
+    }
+
+    .info {
+      font-size: 20px;
+      margin-top: 10px;
+    }
+
+    .buttons {
+      margin-top: 10px;
+    }
+
+    button {
+      font-size: 18px;
+      padding: 10px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 8px;
+      background: #4caf50;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #45a049;
+    }
+
+    .help {
+      font-size: 14px;
+      color: #ccc;
+      margin-top: 10px;
+      padding: 0 20px 30px;
+    }
+  </style>
+</head>
+<body>
+  <h1>避けゲーム</h1>
+  <div class="info">スコア: <span id="score">0</span></div>
+  <canvas id="gameCanvas" width="400" height="600"></canvas>
+
+  <div class="buttons">
+    <button onclick="startGame()">スタート / リスタート</button>
+  </div>
+
+  <div class="help">
+    PC: ← → キーで移動<br>
+    iPad/スマホ: 画面をタッチした場所に移動
+  </div>
+
+  <script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    const scoreText = document.getElementById("score");
+
+    let player;
+    let enemies;
+    let score;
+    let gameOver;
+    let frameCount;
+    let animationId;
+
+    function resetGame() {
+      player = {
+        x: 175,
+        y: 540,
+        width: 50,
+        height: 50,
+        speed: 7,
+        color: "deepskyblue"
+      };
+
+      enemies = [];
+      score = 0;
+      gameOver = false;
+      frameCount = 0;
+      scoreText.textContent = score;
+    }
+
+    const keys = {};
+
+    document.addEventListener("keydown", (e) => {
+      keys[e.key] = true;
+    });
+
+    document.addEventListener("keyup", (e) => {
+      keys[e.key] = false;
+    });
+
+    canvas.addEventListener("touchstart", handleTouch, { passive: false });
+    canvas.addEventListener("touchmove", handleTouch, { passive: false });
+
+    function handleTouch(e) {
+      e.preventDefault();
+      const rect = canvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      const touchX = touch.clientX - rect.left;
+      player.x = touchX - player.width / 2;
+
+      if (player.x < 0) player.x = 0;
+      if (player.x + player.width > canvas.width) {
+        player.x = canvas.width - player.width;
+      }
+    }
+
+    function drawPlayer() {
+      ctx.fillStyle = player.color;
+      ctx.fillRect(player.x, player.y, player.width, player.height);
+    }
+
+    function drawEnemies() {
+      ctx.fillStyle = "red";
+      enemies.forEach((enemy) => {
+        ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+      });
+    }
+
+    function movePlayer() {
+      if (keys["ArrowLeft"]) player.x -= player.speed;
+      if (keys["ArrowRight"]) player.x += player.speed;
+
+      if (player.x < 0) player.x = 0;
+      if (player.x + player.width > canvas.width) {
+        player.x = canvas.width - player.width;
+      }
+    }
+
+    function moveEnemies() {
+      enemies.forEach((enemy) => {
+        enemy.y += enemy.speed;
+      });
+
+      enemies = enemies.filter((enemy) => enemy.y < canvas.height + enemy.height);
+    }
+
+    function spawnEnemy() {
+      const width = 40;
+      const height = 40;
+      const x = Math.random() * (canvas.width - width);
+      const speed = 3 + Math.random() * 3;
+
+      enemies.push({
+        x,
+        y: -height,
+        width,
+        height,
+        speed
+      });
+    }
+
+    function checkCollision(a, b) {
+      return (
+        a.x < b.x + b.width &&
+        a.x + a.width > b.x &&
+        a.y < b.y + b.height &&
+        a.y + a.height > b.y
+      );
+    }
+
+    function update() {
+      if (gameOver) return;
+
+      frameCount++;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      movePlayer();
+      moveEnemies();
+
+      if (frameCount % 30 === 0) {
+        spawnEnemy();
+      }
+
+      enemies.forEach((enemy) => {
+        if (checkCollision(player, enemy)) {
+          gameOver = true;
+        }
+      });
+
+      drawPlayer();
+      drawEnemies();
+
+      score++;
+      scoreText.textContent = score;
+
+      if (gameOver) {
+        ctx.fillStyle = "white";
+        ctx.font = "32px sans-serif";
+        ctx.fillText("ゲームオーバー", 85, 280);
+        ctx.font = "24px sans-serif";
+        ctx.fillText("スコア: " + score, 145, 330);
+        return;
+      }
+
+      animationId = requestAnimationFrame(update);
+    }
+
+    function startGame() {
+      cancelAnimationFrame(animationId);
+      resetGame();
+      update();
+    }
+
+    resetGame();
+    drawPlayer();
+  </script>
+</body>
+</html>
