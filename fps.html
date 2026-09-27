@@ -3,51 +3,162 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FPS制作中</title>
+  <title>FPSゲーム制作中 | 自作ゲーム置き場</title>
+  <meta name="description" content="制作中のFPSゲームについてまとめたページです。今後追加したい機能や目標を書いています。">
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       font-family: sans-serif;
-      background: #0f172a;
+      background: linear-gradient(180deg, #020617, #0f172a, #111827);
       color: white;
+      line-height: 1.7;
+    }
+
+    header {
       text-align: center;
-      padding: 60px 20px;
+      padding: 70px 20px 40px;
+      background: radial-gradient(circle at top, rgba(56, 189, 248, 0.25), transparent 45%);
     }
 
     h1 {
-      font-size: 40px;
-      margin-bottom: 20px;
+      font-size: 42px;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: #cbd5e1;
+      font-size: 18px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 20px 20px 60px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 28px;
+      color: #7dd3fc;
     }
 
     p {
-      font-size: 18px;
-      color: #cbd5e1;
-      line-height: 1.7;
-      max-width: 700px;
-      margin: 0 auto 20px;
+      color: #e5e7eb;
+      font-size: 17px;
     }
 
-    a {
+    ul {
+      padding-left: 22px;
+      color: #e5e7eb;
+      font-size: 17px;
+    }
+
+    li {
+      margin-bottom: 10px;
+    }
+
+    .status {
       display: inline-block;
-      margin-top: 20px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.18);
+      color: #7dd3fc;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 14px;
       text-decoration: none;
-      background: #38bdf8;
-      color: #0f172a;
+      background: linear-gradient(90deg, #38bdf8, #6366f1);
+      color: white;
       padding: 12px 20px;
       border-radius: 12px;
       font-weight: bold;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
+    }
+
+    footer {
+      text-align: center;
+      color: #94a3b8;
+      padding: 25px 20px 40px;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
-  <h1>FPSゲーム制作中</h1>
-  <p>
-    このページは、これから作るFPSゲームのためのページです。
-  </p>
-  <p>
-    まずは1人用の土台を作って、<br>
-    視点移動・移動・ジャンプ・射撃を少しずつ考えていきます。
-  </p>
-  <a href="index.html">ホームに戻る</a>
+  <header>
+    <h1>FPSゲーム制作中</h1>
+    <p class="subtitle">
+      このページは、これから作っていく自作FPSゲームの制作ページです。
+      少しずつ機能を増やして、遊べる作品にしていく予定です。
+    </p>
+    <div class="status">現在: 制作準備中</div>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>このゲームについて</h2>
+      <p>
+        今作ろうとしているのは、一人称視点で遊べるFPSゲームです。
+        まずは小さく作り始めて、少しずつ本格的な形にしていきます。
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>最初に作りたい機能</h2>
+      <ul>
+        <li>前後左右に移動できる</li>
+        <li>視点を動かせる</li>
+        <li>弾を撃てる</li>
+        <li>的に当たる仕組みを作る</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>今後追加したい機能</h2>
+      <ul>
+        <li>敵キャラクター</li>
+        <li>HPの仕組み</li>
+        <li>ステージ</li>
+        <li>スコアや勝敗の表示</li>
+        <li>オンライン対戦</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>ひとこと</h2>
+      <p>
+        まだ制作中ですが、これから少しずつ成長させていきます。
+        完成したら、このページから遊べるようにしたいです。
+      </p>
+      <a class="btn" href="index.html">ホームに戻る</a>
+    </section>
+  </main>
+
+  <footer>
+    © 2026 自作ゲーム置き場
+  </footer>
 </body>
 </html>
